@@ -1,0 +1,80 @@
+pipeline {
+    agent {label 'docker'}
+
+    tools {
+        maven 'Maven_3.9.6'
+        jdk 'JDK_21'
+    }
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/NanaQuaci/Phase3-Week2.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t restassured_api_tests .'
+            }
+        }
+
+        stage('Run Tests in Docker') {
+            steps {
+                sh '''
+                    docker run --rm \
+                    -v $(pwd)/allure-results:/app/allure-results \
+                    restassured_api_tests
+                '''
+            }
+        }
+
+        stage('Generate Allure Report') {
+            steps {
+                sh 'mkdir -p allure-report'
+                sh 'allure generate allure-results --clean -o allure-report'
+            }
+        }
+
+        stage('Publish Allure Report in Jenkins') {
+            steps {
+                allure([
+                    includeProperties: false,
+                    jdk: '',
+                    results: [[path: 'allure-results']]
+                ])
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Archiving test results and Allure report...'
+
+            // Archive Allure report files
+            archiveArtifacts artifacts: 'allure-report/**', allowEmptyArchive: true
+
+            // Publish JUnit XML results
+            junit '**/target/surefire-reports/*.xml'
+
+            // Optional Slack notification
+            script {
+                try {
+                    slackSend (
+                        channel: '#qa-notifications',
+                        color: currentBuild.result == 'SUCCESS' ? 'good' : 'danger',
+                        message: "REST Assured Docker Tests: *${currentBuild.result}* - ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|View Build>)"
+                    )
+                } catch (err) {
+                    echo "Slack notification failed: ${err}"
+                }
+            }
+        }
+    }
+}
