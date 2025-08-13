@@ -53,9 +53,10 @@ pipeline {
         }
     }
 
+
     post {
         always {
-            echo 'Archiving test results and Allure report...'
+            echo 'Archiving tests results and Allure report...'
 
             // Archive Allure report files
             archiveArtifacts artifacts: 'allure-report/**', allowEmptyArchive: true
