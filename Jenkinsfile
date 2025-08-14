@@ -15,14 +15,12 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                dir('source') {
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: '*/main']],
                         userRemoteConfigs: [[url: 'https://github.com/NanaQuaci/Phase3-Week2.git']]
                     ])
                 }
-            }
         }
 
         stage('Build Docker Image') {
