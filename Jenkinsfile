@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven_3.9.6'
-        jdk 'JDK_21'
+        allure 'Allure_Report'
     }
 
     stages {
