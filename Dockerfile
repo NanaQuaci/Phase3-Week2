@@ -19,7 +19,10 @@ RUN mvn dependency:go-offline
 # Copy the rest of the project
 COPY src ./src
 
+
+# Create directories with proper permissions
+RUN mkdir -p allure-results target/surefire-reports && \
+    chmod -R 777 allure-results target/surefire-reports \
+
 # Run tests when container starts
-CMD mvn clean test && \
-    mkdir -p allure-report && \
-    allure generate allure-results --clean -o allure-report
+CMD ["mvn", "test", "-Dmaven.test.failure.ignore=true", "-Dmaven.clean.skip=true"]

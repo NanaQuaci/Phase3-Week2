@@ -41,9 +41,11 @@ pipeline {
                 steps {
                     sh '''
                         mkdir -p allure-results target/surefire-reports
+                        chmod 777 allure-results target/surefire-reports
                         docker run --rm \
-                            -v "$PWD/allure-results:/app/allure-results" \
-                            -v "$PWD/target/surefire-reports:/app/target/surefire-reports" \
+                            --user $(id -u):$(id -g) \
+                            -v "$PWD/allure-results:/app/allure-results:rw" \
+                            -v "$PWD/target/surefire-reports:/app/target/surefire-reports:rw" \
                             restassured_api_tests
                     '''
                 }
@@ -52,6 +54,9 @@ pipeline {
 
 
         stage('Publish Allure Report in Jenkins') {
+            when {
+                expression { fileExists('allure-results') }
+            }
             steps {
                 allure([
                     includeProperties: false,
