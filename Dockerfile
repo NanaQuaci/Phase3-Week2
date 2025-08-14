@@ -18,7 +18,6 @@ RUN mvn dependency:go-offline
 
 # Copy the rest of the project
 COPY src ./src
-COPY allure-results ./allure-results
 
 # Run tests when container starts
 CMD mvn clean test && \
