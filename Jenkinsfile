@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'docker'}
+    agent { label 'docker' }
 
     tools {
         maven 'Maven_3.9.6'
@@ -15,25 +15,28 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[url: 'https://github.com/NanaQuaci/Phase3-Week2.git']]
-                ])
+                dir('source') {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: '*/main']],
+                        userRemoteConfigs: [[url: 'https://github.com/NanaQuaci/Phase3-Week2.git']]
+                    ])
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t restassured_api_tests .'
+                bat 'docker build -t restassured_api_tests .'
             }
         }
 
         stage('Run Tests in Docker') {
             steps {
-                sh '''
-                    docker run --rm \
-                    -v $(pwd)/allure-results:/app/allure-results \
+                bat '''
+                    if not exist allure-results mkdir allure-results
+                    docker run --rm ^
+                    -v "%cd%\\allure-results:/app/allure-results" ^
                     restassured_api_tests
                 '''
             }
@@ -41,8 +44,11 @@ pipeline {
 
         stage('Generate Allure Report') {
             steps {
-                sh 'mkdir -p allure-report'
-                sh 'allure generate allure-results --clean -o allure-report'
+                // Make sure directory exists
+                bat 'if not exist allure-report mkdir allure-report'
+
+                // This requires Allure CLI to be installed and on PATH
+                bat 'allure generate allure-results --clean -o allure-report'
             }
         }
 
@@ -57,7 +63,6 @@ pipeline {
         }
     }
 
-
     post {
         always {
             echo 'Archiving tests results and Allure report...'
@@ -71,7 +76,7 @@ pipeline {
             // Optional Slack notification
             script {
                 try {
-                    slackSend (
+                    slackSend(
                         channel: '#qa-notifications',
                         color: currentBuild.result == 'SUCCESS' ? 'good' : 'danger',
                         message: "REST Assured Docker Tests: *${currentBuild.result}* - ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|View Build>)"
