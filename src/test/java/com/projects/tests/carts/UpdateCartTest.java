@@ -7,9 +7,7 @@ import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.*;
 
 @Epic("Cart Management")
 @Feature("Update Cart")
