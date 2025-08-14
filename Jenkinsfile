@@ -30,10 +30,8 @@ pipeline {
         stage('Run Tests in Docker') {
             steps {
                 sh '''
-                    if not exist allure-results mkdir allure-results
-                    docker run --rm ^
-                    -v "%cd%\\allure-results:/app/allure-results" ^
-                    restassured_api_tests
+                    mkdir -p allure-results
+                    docker run --rm -v "$PWD/allure-results:/app/allure-results" restassured_api_tests
                 '''
             }
         }
