@@ -1,4 +1,4 @@
-package com.projects.base;
+package com.projects.tests.base;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;

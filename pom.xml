@@ -65,6 +65,12 @@
             <version>2.0.13</version> <!-- Match your SLF4J version if possible -->
         </dependency>
 
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version>
+        </dependency>
+
     </dependencies>
 
     <build>
