@@ -15,24 +15,20 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                dir('source') {
-                    deleteDir()
-                    git branch: 'main',
-                        url: 'https://github.com/NanaQuaci/Phase3-Week2.git'
-                }
+               checkout scm
             }
         }
 
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t restassured_api_tests .'
+                sh 'docker build -t restassured_api_tests .'
             }
         }
 
         stage('Run Tests in Docker') {
             steps {
-                bat '''
+                sh '''
                     if not exist allure-results mkdir allure-results
                     docker run --rm ^
                     -v "%cd%\\allure-results:/app/allure-results" ^
@@ -41,15 +37,6 @@ pipeline {
             }
         }
 
-        stage('Generate Allure Report') {
-            steps {
-                // Make sure directory exists
-                bat 'if not exist allure-report mkdir allure-report'
-
-                // This requires Allure CLI to be installed and on PATH
-                bat 'allure generate allure-results --clean -o allure-report'
-            }
-        }
 
         stage('Publish Allure Report in Jenkins') {
             steps {
