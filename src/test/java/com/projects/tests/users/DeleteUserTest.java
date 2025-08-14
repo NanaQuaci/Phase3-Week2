@@ -5,6 +5,8 @@ import com.projects.endpoints.UsersEndpoint;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.Test;
 
+//comment
+
 import static org.hamcrest.Matchers.*;
 
 @Epic("Users API")
