@@ -57,7 +57,7 @@ pipeline {
             // Archive Allure report files
             archiveArtifacts artifacts: 'allure-report/**', allowEmptyArchive: true
 
-            // Publish JUnit XML results
+            // Publish JUnit XML result
             junit '**/target/surefire-reports/*.xml'
 
             // Optional Slack notification
