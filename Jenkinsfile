@@ -27,14 +27,28 @@ pipeline {
             }
         }
 
-        stage('Run Tests in Docker') {
-            steps {
-                sh '''
-                    mkdir -p allure-results
-                    docker run --rm -v "$PWD/allure-results:/app/allure-results" restassured_api_tests
-                '''
+//         stage('Run Tests in Docker') {
+//             steps {
+//                 sh '''
+//                     mkdir -p allure-results
+//                     docker run --rm -v "$PWD/allure-results:/app/allure-results" restassured_api_tests
+//                 '''
+//             }
+//         }
+
+
+            stage('Run Tests in Docker') {
+                steps {
+                    sh '''
+                        mkdir -p allure-results target/surefire-reports
+                        docker run --rm \
+                            -v "$PWD/allure-results:/app/allure-results" \
+                            -v "$PWD/target/surefire-reports:/app/target/surefire-reports" \
+                            restassured_api_tests
+                    '''
+                }
             }
-        }
+
 
 
         stage('Publish Allure Report in Jenkins') {
