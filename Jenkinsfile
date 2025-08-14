@@ -16,6 +16,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 dir('source') {
+                    deleteDir()
                     git branch: 'main',
                         url: 'https://github.com/NanaQuaci/Phase3-Week2.git'
                 }
