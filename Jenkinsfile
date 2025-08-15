@@ -27,16 +27,6 @@ pipeline {
             }
         }
 
-//         stage('Run Tests in Docker') {
-//             steps {
-//                 sh '''
-//                     mkdir -p allure-results
-//                     docker run --rm -v "$PWD/allure-results:/app/allure-results" restassured_api_tests
-//                 '''
-//             }
-//         }
-
-
             stage('Run Tests in Docker') {
                 steps {
                     sh '''
@@ -77,11 +67,11 @@ pipeline {
             // Publish JUnit XML result
             junit '**/target/surefire-reports/*.xml'
 
-            // Optional Slack notification
+            //Slack notification
             script {
                 try {
                     slackSend(
-                        channel: '#qa-notifications',
+                        channel: '#ci-alerts',
                         color: currentBuild.result == 'SUCCESS' ? 'good' : 'danger',
                         message: "REST Assured Docker Tests: *${currentBuild.result}* - ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|View Build>)"
                     )
