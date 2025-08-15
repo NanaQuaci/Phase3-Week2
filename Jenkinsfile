@@ -89,9 +89,9 @@ pipeline {
                     def commitHash = env.GIT_COMMIT ? env.GIT_COMMIT.take(8) : "unknown"
 
                     // Build the message
-                    def message = "${statusEmoji} REST Assured API Tests finished with status: ${statusText} " +
-                                 ":package: Repo: ${env.JOB_NAME} " +
-                                 ":link: Commit: ${commitHash} " +
+                    def message = "${statusEmoji} REST Assured API Tests finished with status: ${statusText}\n " +
+                                 ":package: Repo: ${env.JOB_NAME}\n " +
+                                 ":link: Commit: ${commitHash}\n " +
                                  ":bar_chart: Report: ${env.BUILD_URL}allure"
                     slackSend(
                         channel: '#ci-alerts',
