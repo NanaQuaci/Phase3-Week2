@@ -70,6 +70,29 @@ pipeline {
             //Send Slack notification
             script {
                 try {
+                    //Determine status emoji and text
+                    def statusEmoji = ""
+                    def statusText = ""
+
+                    if (currentBuild.result == 'SUCCESS') {
+                        statusEmoji = ":white_check_mark:"
+                        statusText = "success"
+                    } else if (currentBuild.result == 'UNSTABLE') {
+                        statusEmoji = ":warning:"
+                        statusText = "unstable"
+                    } else {
+                        statusEmoji = ":x:"
+                        statusText = "failed"
+                    }
+
+                    // Get commit hash (first 8 characters)
+                    def commitHash = env.GIT_COMMIT ? env.GIT_COMMIT.take(8) : "unknown"
+
+                    // Build the message
+                    def message = "${statusEmoji} REST Assured API Tests finished with status: ${statusText} " +
+                                 ":package: Repo: ${env.JOB_NAME} " +
+                                 ":link: Commit: ${commitHash} " +
+                                 ":bar_chart: Report: ${env.BUILD_URL}allure"
                     slackSend(
                         channel: '#ci-alerts',
                         color: currentBuild.result == 'SUCCESS' ? 'good' : 'danger',
