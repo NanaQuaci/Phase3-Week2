@@ -96,7 +96,7 @@ pipeline {
                     slackSend(
                         channel: '#ci-alerts',
                         color: currentBuild.result == 'SUCCESS' ? 'good' : 'danger',
-                        message: "REST Assured Docker Tests: *${currentBuild.result}* - ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|View Build>)"
+                        message: message
                     )
                 } catch (err) {
                     echo "Slack notification failed: ${err}"
