@@ -20,6 +20,8 @@ RUN mvn dependency:go-offline
 COPY src ./src
 
 
+#lost a couple of files
+
 # Create directories with proper permissions
 RUN mkdir -p allure-results target/surefire-reports && \
     chmod -R 777 allure-results target/surefire-reports
