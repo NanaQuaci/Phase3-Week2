@@ -67,7 +67,7 @@ pipeline {
             // Publish JUnit XML result
             junit '**/target/surefire-reports/*.xml'
 
-            //Slack notification
+            //Send Slack notification
             script {
                 try {
                     slackSend(
