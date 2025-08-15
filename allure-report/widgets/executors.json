@@ -1,0 +1,1 @@
+[{"name":"Jenkins","type":"jenkins","url":"http://172.18.241.218:8080/","buildOrder":20,"buildName":"restassured-api-tests #20","buildUrl":"http://172.18.241.218:8080/job/restassured-api-tests/20/","reportName":"AllureReport","reportUrl":"http://172.18.241.218:8080/job/restassured-api-tests/20/allure"}]
